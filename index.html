@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+<title>TradeLeads — Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #e8ff47;
+    --accent-dim: rgba(232,255,71,0.12);
+    --hot: #ff6b4a;
+    --hot-dim: rgba(255,107,74,0.12);
+    --warm: #ffb830;
+    --warm-dim: rgba(255,184,48,0.12);
+    --cold: #60a8ff;
+    --cold-dim: rgba(96,168,255,0.12);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); }
+
+  .app {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 1rem 1.25rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--muted); font-weight: 400; }
+
+  .tabs {
+    display: flex;
+    padding: 0.875rem 1.25rem 0;
+    gap: 4px;
+  }
+  .tab {
+    flex: 1;
+    padding: 9px 0;
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 500;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    color: var(--muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab.active {
+    background: var(--accent);
+    color: #0a0a0a;
+    border-color: transparent;
+  }
+
+  .content { flex: 1; padding: 1rem 1.25rem 2rem; }
+
+  /* SCANNER */
+  .scanner-frame {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  #video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #video { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .cam-idle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .cam-idle .icon {
+    width: 48px; height: 48px;
+    margin: 0 auto 12px;
+    border: 1.5px solid var(--border2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .viewfinder {
+    position: absolute;
+    inset: 18%;
+    border: 1.5px solid rgba(232,255,71,0.5);
+    border-radius: 10px;
+    pointer-events: none;
+    display: none;
+  }
+  .viewfinder.active { display: block; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse {
+    0%, 100% { border-color: rgba(232,255,71,0.4); }
+    50% { border-color: rgba(232,255,71,0.9); }
+  }
+  .vf-c { position: absolute; width: 22px; height: 22px; }
+  .vf-c::before, .vf-c::after { content: ''; position: absolute; background: var(--accent); }
+  .vf-c.tl { top: -2px; left: -2px; }
+  .vf-c.tl::before { top: 0; left: 0; width: 3px; height: 18px; }
+  .vf-c.tl::after  { top: 0; left: 0; width: 18px; height: 3px; }
+  .vf-c.tr { top: -2px; right: -2px; }
+  .vf-c.tr::before { top: 0; right: 0; width: 3px; height: 18px; }
+  .vf-c.tr::after  { top: 0; right: 0; width: 18px; height: 3px; }
+  .vf-c.bl { bottom: -2px; left: -2px; }
+  .vf-c.bl::before { bottom: 0; left: 0; width: 3px; height: 18px; }
+  .vf-c.bl::after  { bottom: 0; left: 0; width: 18px; height: 3px; }
+  .vf-c.br { bottom: -2px; right: -2px; }
+  .vf-c.br::before { bottom: 0; right: 0; width: 3px; height: 18px; }
+  .vf-c.br::after  { bottom: 0; right: 0; width: 18px; height: 3px; }
+
+  .scanner-controls { padding: 14px 14px; display: flex; gap: 8px; }
+  .btn-cam {
+    flex: 1;
+    padding: 11px 0;
+    font-size: 14px;
+    font-family: var(--font);
+    font-weight: 500;
+    background: var(--accent);
+    color: #0a0a0a;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-cam:active { opacity: 0.8; }
+  .btn-cam.stop { background: var(--surface2); color: var(--text); border: 0.5px solid var(--border); }
+
+  .detected-pill {
+    display: none;
+    margin: 0 14px 14px;
+    background: rgba(232,255,71,0.1);
+    border: 0.5px solid rgba(232,255,71,0.3);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--accent);
+    word-break: break-all;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+
+  /* FORM */
+  .form-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .form-card.visible { display: block; animation: slideUp 0.2s ease; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .id-display {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 0.5px solid rgba(232,255,71,0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    word-break: break-all;
+    line-height: 1.4;
+  }
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: var(--surface2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    padding: 11px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--border2);
+  }
+  textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+  select { cursor: pointer; }
+  option { background: #1e1e1e; }
+
+  .prio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .prio-btn {
+    padding: 9px 0;
+    font-size: 12px;
+    font-family: var(--font);
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.12s;
+    text-align: center;
+  }
+  .prio-btn.sel-hot  { background: var(--hot-dim); border-color: var(--hot); color: var(--hot); }
+  .prio-btn.sel-warm { background: var(--warm-dim); border-color: var(--warm); color: var(--warm); }
+  .prio-btn.sel-cold { background: var(--cold-dim); border-color: var(--cold); color: var(--cold); }
+
+  .btn-save {
+    width: 100%;
+    padding: 13px;
+    font-size: 15px;
+    font-family: var(--font);
+    font-weight: 500;
+    background: var(--accent);
+    color: #0a0a0a;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: opacity 0.15s;
+  }
+  .btn-save:active { opacity: 0.8; }
+
+  .manual-wrap { display: flex; gap: 8px; }
+  .manual-wrap input { flex: 1; }
+  .btn-manual {
+    padding: 11px 14px;
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 500;
+    background: var(--surface);
+    color: var(--text);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s;
+  }
+  .btn-manual:active { border-color: var(--border2); }
+
+  /* LEADS */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-n { font-size: 26px; font-weight: 500; line-height: 1; margin-bottom: 4px; }
+  .stat-l { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .filter-row input { flex: 1; font-size: 13px; }
+  .filter-row select { flex: 0 0 auto; width: auto; font-size: 13px; padding: 11px 10px; }
+
+  .lead-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.125rem;
+    margin-bottom: 0.625rem;
+    transition: border-color 0.15s;
+  }
+  .lead-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .lead-id { font-family: var(--mono); font-size: 13px; color: var(--text); word-break: break-all; line-height: 1.4; }
+  .lead-time { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-hot  { background: var(--hot-dim);  color: var(--hot);  border: 0.5px solid rgba(255,107,74,0.3); }
+  .badge-warm { background: var(--warm-dim); color: var(--warm); border: 0.5px solid rgba(255,184,48,0.3); }
+  .badge-cold { background: var(--cold-dim); color: var(--cold); border: 0.5px solid rgba(96,168,255,0.3); }
+  .lead-note {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #aaa;
+    border-top: 0.5px solid var(--border);
+    padding-top: 8px;
+    line-height: 1.55;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 3.5rem 1rem;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .toolbar { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .btn-export {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 500;
+    background: var(--surface);
+    color: var(--text);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .btn-export:active { border-color: var(--border2); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 10px 20px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.2s;
+    pointer-events: none;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  canvas { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">trade<span>leads</span></div>
+    <div style="font-size:11px;color:var(--muted);font-family:var(--mono)" id="lead-count-header">0 leads</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('scan')">Escanear</button>
+    <button class="tab" onclick="switchTab('leads')">Leads</button>
+  </div>
+
+  <div class="content">
+
+    <!-- SCAN PANEL -->
+    <div id="panel-scan">
+      <div class="scanner-frame">
+        <div id="video-wrap">
+          <video id="video" playsinline autoplay muted></video>
+          <div class="viewfinder" id="viewfinder">
+            <div class="vf-c tl"></div><div class="vf-c tr"></div>
+            <div class="vf-c bl"></div><div class="vf-c br"></div>
+          </div>
+          <div class="cam-idle" id="cam-idle">
+            <div class="icon">&#9638;</div>
+            Toca el botón para activar<br>la cámara trasera
+          </div>
+        </div>
+        <div class="detected-pill" id="detected-pill"></div>
+        <div class="scanner-controls">
+          <button class="btn-cam" id="btn-cam" onclick="toggleCamera()">Activar cámara</button>
+        </div>
+      </div>
+
+      <div class="divider">o ingresa manualmente</div>
+
+      <div class="field" style="margin-bottom:1rem">
+        <div class="manual-wrap">
+          <input type="text" id="manual-id" placeholder="ID, correo, badge number..." />
+          <button class="btn-manual" onclick="captureManual()">Capturar</button>
+        </div>
+      </div>
+
+      <div class="form-card" id="form-card">
+        <div class="field">
+          <label>ID capturado</label>
+          <div class="id-display" id="id-display">—</div>
+        </div>
+        <div class="field">
+          <label>Prioridad</label>
+          <div class="prio-grid">
+            <button class="prio-btn" id="p-hot"  onclick="setPrio('hot')">🔥 Hot</button>
+            <button class="prio-btn sel-warm" id="p-warm" onclick="setPrio('warm')">🌤 Warm</button>
+            <button class="prio-btn" id="p-cold" onclick="setPrio('cold')">🧊 Cold</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Nota</label>
+          <textarea id="note-input" placeholder="Producto de interés, presupuesto, próximos pasos..."></textarea>
+        </div>
+        <button class="btn-save" onclick="saveLead()">Guardar lead →</button>
+      </div>
+    </div>
+
+    <!-- LEADS PANEL -->
+    <div id="panel-leads" style="display:none">
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-n" id="s-total">0</div>
+          <div class="stat-l">Total</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="s-hot" style="color:var(--hot)">0</div>
+          <div class="stat-l">Hot</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="s-notes" style="color:var(--accent)">0</div>
+          <div class="stat-l">Con nota</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="btn-export" onclick="exportCSV()">⬇ Exportar CSV</button>
+        <button class="btn-export" onclick="exportJSON()">⬇ Exportar JSON</button>
+      </div>
+
+      <div class="filter-row">
+        <input type="text" id="search" placeholder="Buscar..." oninput="renderLeads()" />
+        <select id="filter-p" onchange="renderLeads()">
+          <option value="">Todos</option>
+          <option value="hot">Hot</option>
+          <option value="warm">Warm</option>
+          <option value="cold">Cold</option>
+        </select>
+      </div>
+
+      <div id="leads-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<canvas id="qr-canvas"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
+<script>
+let leads = JSON.parse(localStorage.getItem('tradeleads_v1') || '[]');
+let stream = null;
+let scanning = false;
+let scanTimer = null;
+let currentQR = '';
+let currentPrio = 'warm';
+
+function save() { localStorage.setItem('tradeleads_v1', JSON.stringify(leads)); }
+
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-scan').style.display = t === 'scan' ? 'block' : 'none';
+  document.getElementById('panel-leads').style.display = t === 'leads' ? 'block' : 'none';
+  if (t === 'leads') renderLeads();
+}
+
+function setPrio(p) {
+  currentPrio = p;
+  ['hot','warm','cold'].forEach(x => {
+    const btn = document.getElementById('p-' + x);
+    btn.className = 'prio-btn' + (x === p ? ' sel-' + x : '');
+  });
+}
+
+async function toggleCamera() {
+  if (scanning) { stopCamera(); return; }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 1280 } }
+    });
+    const v = document.getElementById('video');
+    v.srcObject = stream;
+    await v.play();
+    v.style.display = 'block';
+    document.getElementById('cam-idle').style.display = 'none';
+    document.getElementById('viewfinder').classList.add('active');
+    document.getElementById('btn-cam').textContent = 'Detener cámara';
+    document.getElementById('btn-cam').classList.add('stop');
+    scanning = true;
+    scanTimer = setInterval(scanFrame, 250);
+  } catch(e) {
+    toast('No se pudo acceder a la cámara');
+  }
+}
+
+function stopCamera() {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  clearInterval(scanTimer);
+  scanning = false;
+  const v = document.getElementById('video');
+  v.style.display = 'none';
+  v.srcObject = null;
+  document.getElementById('cam-idle').style.display = 'block';
+  document.getElementById('viewfinder').classList.remove('active');
+  document.getElementById('btn-cam').textContent = 'Activar cámara';
+  document.getElementById('btn-cam').classList.remove('stop');
+}
+
+function scanFrame() {
+  const v = document.getElementById('video');
+  if (v.readyState < v.HAVE_ENOUGH_DATA) return;
+  const c = document.getElementById('qr-canvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0);
+  const img = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+  const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+  if (code && code.data && code.data !== currentQR) {
+    currentQR = code.data;
+    stopCamera();
+    showForm(code.data);
+    const pill = document.getElementById('detected-pill');
+    pill.textContent = code.data;
+    pill.style.display = 'block';
+    toast('QR detectado');
+  }
+}
+
+function captureManual() {
+  const val = document.getElementById('manual-id').value.trim();
+  if (!val) { toast('Ingresa un identificador'); return; }
+  document.getElementById('detected-pill').style.display = 'none';
+  showForm(val);
+}
+
+function showForm(id) {
+  document.getElementById('id-display').textContent = id;
+  document.getElementById('note-input').value = '';
+  setPrio('warm');
+  const fc = document.getElementById('form-card');
+  fc.classList.add('visible');
+  setTimeout(() => document.getElementById('note-input').focus(), 300);
+}
+
+function saveLead() {
+  const id = document.getElementById('id-display').textContent;
+  if (!id || id === '—') { toast('Sin ID'); return; }
+  leads.unshift({ id, note: document.getElementById('note-input').value.trim(), priority: currentPrio, ts: Date.now() });
+  save();
+  document.getElementById('form-card').classList.remove('visible');
+  document.getElementById('manual-id').value = '';
+  document.getElementById('detected-pill').style.display = 'none';
+  currentQR = '';
+  updateHeader();
+  toast('Lead guardado ✓');
+}
+
+function updateHeader() {
+  document.getElementById('lead-count-header').textContent = leads.length + ' lead' + (leads.length !== 1 ? 's' : '');
+}
+
+function renderLeads() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const p = document.getElementById('filter-p').value;
+  const list = leads.filter(l =>
+    (!q || l.id.toLowerCase().includes(q) || (l.note && l.note.toLowerCase().includes(q))) &&
+    (!p || l.priority === p)
+  );
+  document.getElementById('s-total').textContent = leads.length;
+  document.getElementById('s-hot').textContent = leads.filter(l => l.priority === 'hot').length;
+  document.getElementById('s-notes').textContent = leads.filter(l => l.note).length;
+  updateHeader();
+  const el = document.getElementById('leads-list');
+  if (!list.length) {
+    el.innerHTML = '<div class="empty">Sin leads aún.<br>Escanea tu primer QR para comenzar.</div>';
+    return;
+  }
+  const labels = { hot: 'Hot', warm: 'Warm', cold: 'Cold' };
+  el.innerHTML = list.map(l => {
+    const d = new Date(l.ts);
+    const dt = d.toLocaleDateString('es-MX', { month: 'short', day: 'numeric' }) + ' ' +
+               d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    return `<div class="lead-card">
+      <div class="lead-top">
+        <div>
+          <div class="lead-id">${l.id}</div>
+          <div class="lead-time">${dt}</div>
+        </div>
+        <span class="badge badge-${l.priority}">${labels[l.priority]}</span>
+      </div>
+      ${l.note ? `<div class="lead-note">${l.note}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function exportCSV() {
+  if (!leads.length) { toast('No hay leads'); return; }
+  const rows = [['ID','Prioridad','Nota','Fecha']].concat(leads.map(l =>
+    [l.id, l.priority, (l.note||'').replace(/"/g,'""'), new Date(l.ts).toLocaleString('es-MX')]
+      .map(x => `"${x}"`)
+  ));
+  download('leads_tradeshow.csv', '\uFEFF' + rows.map(r => r.join(',')).join('\n'), 'text/csv');
+}
+
+function exportJSON() {
+  if (!leads.length) { toast('No hay leads'); return; }
+  download('leads_tradeshow.json', JSON.stringify(leads, null, 2), 'application/json');
+}
+
+function download(name, content, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type }));
+  a.download = name; a.click();
+  toast('Archivo descargado');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+updateHeader();
+</script>
+</body>
+</html>
