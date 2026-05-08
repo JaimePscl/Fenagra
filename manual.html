@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leads Tracker 1.0 — User Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f172a;--ink2:#334155;--muted:#94a3b8;--paper:#fafaf9;--white:#ffffff;--border:#e2e8f0;--hot:#dc2626;--warm:#d97706;--cold:#2563eb;--sc:#7c3aed;--hf:#0891b2;--fl:#ea580c;--s1:#6366f1;--s2:#0891b2;--s3:#16a34a;--s4:#d97706;--s5:#dc2626;--f:'DM Sans',sans-serif;--m:'DM Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);line-height:1.6;}
+.cover{background:var(--ink);color:#fff;padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.015) 40px,rgba(255,255,255,.015) 80px);}
+.cover-eyebrow{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1rem;font-family:var(--m);}
+.cover-title{font-size:clamp(32px,8vw,52px);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
+.cover-title span{color:#6366f1;}
+.cover-sub{font-size:16px;color:rgba(255,255,255,.55);margin-bottom:2.5rem;}
+.cover-tag{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:6px 14px;border-radius:99px;font-size:12px;color:rgba(255,255,255,.6);font-family:var(--m);}
+.intro-bar{background:#fff;border-bottom:1px solid var(--border);padding:1.5rem 2rem;display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;}
+.intro-item{text-align:center;}
+.intro-item .n{font-size:28px;font-weight:700;line-height:1;margin-bottom:3px;}
+.intro-item .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:500;}
+.manual{max-width:740px;margin:0 auto;padding:3rem 1.5rem;}
+.step{margin-bottom:4rem;}
+.step-header{display:flex;align-items:center;gap:14px;margin-bottom:1.5rem;}
+.step-number{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+.step-title{font-size:22px;font-weight:700;line-height:1.2;}
+.step-desc{font-size:14px;color:var(--ink2);margin-top:3px;}
+.step-body{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+@media(max-width:560px){.step-body{grid-template-columns:1fr;}}
+.phone{background:var(--white);border:1.5px solid var(--ink);border-radius:28px;overflow:hidden;box-shadow:4px 6px 0 var(--ink);max-width:240px;margin:0 auto;}
+.phone-notch{height:28px;background:var(--ink);display:flex;align-items:center;justify-content:center;}
+.phone-notch-pill{width:60px;height:6px;background:#333;border-radius:3px;}
+.s-header{padding:10px 12px 8px;border-bottom:1px solid var(--border);}
+.s-logo{font-size:13px;font-weight:700;color:var(--ink);}
+.s-sub{font-size:9px;color:var(--muted);margin-top:1px;}
+.s-tabs{display:flex;border-bottom:1px solid var(--border);}
+.s-tab{flex:1;padding:7px 0;text-align:center;font-size:10px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;}
+.s-tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+.s-body{padding:10px 12px;}
+.s-label{font-size:8px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.s-input{border:1px solid var(--border);border-radius:5px;padding:7px 9px;font-size:11px;color:var(--muted);width:100%;margin-bottom:8px;font-style:italic;}
+.s-input.filled{color:var(--ink);font-style:normal;font-weight:500;}
+.s-btn{background:var(--ink);color:#fff;border-radius:5px;padding:8px;text-align:center;font-size:11px;font-weight:600;width:100%;margin-top:4px;}
+.s-btn.outline{background:transparent;color:var(--ink);border:1px solid var(--border);}
+.s-camera{background:#111;aspect-ratio:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.s-camera-vf{position:absolute;inset:18%;border:1.5px solid rgba(255,255,255,.6);border-radius:5px;}
+.s-qr-icon{font-size:32px;opacity:.25;}
+.s-camera-scan{position:absolute;width:60%;height:1px;background:rgba(99,102,241,.8);box-shadow:0 0 6px rgba(99,102,241,1);top:50%;}
+.s-detected{background:#f0fdf4;border-top:1px solid #bbf7d0;padding:5px 9px;font-size:9px;color:#16a34a;font-weight:500;}
+.s-section{padding:8px 12px;border-bottom:1px solid var(--border);}
+.s-section:last-child{border-bottom:none;}
+.s-id{font-size:11px;font-weight:600;color:var(--ink);}
+.s-div-row{display:flex;gap:4px;margin-top:4px;}
+.s-div-btn{flex:1;padding:5px 3px;text-align:center;border:1px solid var(--border);border-radius:4px;font-size:7.5px;font-weight:500;color:var(--muted);line-height:1.4;}
+.s-div-btn.asc{border-color:var(--sc);color:var(--sc);background:#f5f3ff;}
+.s-div-btn.afl{border-color:var(--fl);color:var(--fl);background:#fff7ed;}
+.s-prio-row{display:flex;gap:4px;margin-top:4px;}
+.s-prio-btn{flex:1;padding:5px 0;text-align:center;border:1px solid var(--border);border-radius:4px;font-size:9px;font-weight:500;color:var(--muted);}
+.s-prio-btn.warm{border-color:var(--warm);color:var(--warm);background:#fffbeb;}
+.s-note{border:1px solid var(--border);border-radius:4px;padding:5px 7px;font-size:9px;color:var(--muted);min-height:36px;margin-top:4px;font-style:italic;}
+.s-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px;}
+.s-stat{border:1px solid var(--border);border-radius:4px;padding:6px 4px;text-align:center;}
+.s-stat-n{font-size:18px;font-weight:700;line-height:1;}
+.s-stat-l{font-size:7px;color:var(--muted);text-transform:uppercase;margin-top:1px;}
+.s-lead{border:1px solid var(--border);border-radius:5px;padding:7px 9px;margin-bottom:5px;}
+.s-lead-id{font-size:10px;font-weight:600;}
+.s-lead-meta{font-size:8px;color:var(--muted);margin-top:2px;display:flex;gap:4px;flex-wrap:wrap;}
+.s-badge{font-size:7.5px;padding:1px 5px;border-radius:99px;font-weight:500;}
+.s-dchip{font-size:7.5px;padding:1px 4px;border-radius:3px;font-weight:500;}
+.s-note-text{font-size:8px;color:#64748b;margin-top:4px;font-style:italic;border-top:1px solid var(--border);padding-top:4px;}
+.s-sync-bar{display:flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:6px;font-size:8px;color:var(--muted);}
+.s-sync-dot{width:5px;height:5px;border-radius:50%;background:#16a34a;flex-shrink:0;}
+.s-sync-btn{margin-left:auto;background:var(--ink);color:#fff;padding:2px 7px;border-radius:3px;font-size:7px;font-weight:600;}
+.callout-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.callout-item{display:flex;align-items:flex-start;gap:12px;}
+.callout-arrow{font-size:20px;flex-shrink:0;margin-top:1px;line-height:1;}
+.callout-text strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px;}
+.callout-text span{font-size:13px;color:var(--ink2);line-height:1.5;}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-top:1rem;}
+.tip-icon{font-size:16px;flex-shrink:0;}
+.tip-text{font-size:13px;color:#92400e;line-height:1.5;}
+.warn{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-top:1rem;}
+.warn-text{font-size:13px;color:#991b1b;line-height:1.5;}
+.section-divider{display:flex;align-items:center;gap:12px;margin:3rem 0 2rem;color:var(--muted);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.quick-ref{background:var(--white);border:1.5px solid var(--ink);border-radius:12px;padding:1.5rem;box-shadow:3px 3px 0 var(--ink);}
+.quick-ref h3{font-size:16px;font-weight:700;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);}
+.qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:400px){.qr-grid{grid-template-columns:1fr;}}
+.qr-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;}
+.qr-icon{font-size:18px;flex-shrink:0;}
+.qr-label{font-size:12px;font-weight:500;}
+.qr-desc{font-size:11px;color:var(--muted);margin-top:1px;}
+.prio-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem;}
+.pl-item{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:500;}
+.pl-hot{background:#fef2f2;color:var(--hot);}
+.pl-warm{background:#fffbeb;color:var(--warm);}
+.pl-cold{background:#eff6ff;color:var(--cold);}
+.bu-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem;}
+.bu-item{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:500;}
+.bu-sc{background:#f5f3ff;color:var(--sc);}
+.bu-hf{background:#ecfeff;color:var(--hf);}
+.bu-fl{background:#fff7ed;color:var(--fl);}
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:2rem;text-align:center;font-size:12px;font-family:var(--m);}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="cover-eyebrow">User Manual</div>
+  <div class="cover-title">Leads<span>Tracker</span><br>1.0</div>
+  <div class="cover-sub">Fenagra — Quick Start Guide</div>
+  <div class="cover-tag">5 steps to capture &amp; sync a lead</div>
+</div>
+<div class="intro-bar">
+  <div class="intro-item"><div class="n">3</div><div class="l">Business Units</div></div>
+  <div class="intro-item"><div class="n" style="color:var(--s1)">5</div><div class="l">Steps total</div></div>
+  <div class="intro-item"><div class="n" style="color:var(--s3)">∞</div><div class="l">Leads per user</div></div>
+  <div class="intro-item"><div class="n" style="color:var(--warm)">Live</div><div class="l">Sheets sync</div></div>
+</div>
+<div class="manual">
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--s1)">1</div>
+      <div><div class="step-title">Enter your name</div><div class="step-desc">Only needed once — stays saved until you reset.</div></div>
+    </div>
+    <div class="step-body">
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div style="padding:20px 14px;text-align:center">
+          <div style="font-size:17px;font-weight:700;margin-bottom:4px">Leads Tracker 1.0</div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:4px">Welcome to Fenagra</div>
+          <div style="font-size:9px;color:var(--muted);margin-bottom:14px;line-height:1.5">Enter your name to identify<br>the leads you capture.</div>
+          <div class="s-label">Your name</div>
+          <div class="s-input filled">Maria González</div>
+          <div class="s-btn">Get started</div>
+        </div>
+      </div>
+      <ul class="callout-list" style="padding-top:.5rem">
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Type your full name</strong><span>Your name will appear on every lead you capture in the shared sheet.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Tap "Get started"</strong><span>The app opens directly. Your name is remembered — no need to re-enter it.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>To switch users</strong><span>Tap your name pill in the top right corner at any time.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--s2)">2</div>
+      <div><div class="step-title">Scan the badge</div><div class="step-desc">Point the camera at any QR code or barcode.</div></div>
+    </div>
+    <div class="step-body">
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="s-header"><div class="s-logo">Leads Tracker 1.0</div><div class="s-sub">Maria González · 0 leads captured</div></div>
+        <div class="s-tabs"><div class="s-tab active">Scan</div><div class="s-tab">Leads</div></div>
+        <div style="margin:10px;border:1px solid var(--border);border-radius:6px;overflow:hidden">
+          <div style="padding:5px 9px;border-bottom:1px solid var(--border);font-size:8px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between"><span>Optical reader</span><span style="color:var(--s2)">QR + Barcode</span></div>
+          <div class="s-camera">
+            <div class="s-camera-vf"></div>
+            <div class="s-camera-scan"></div>
+            <div class="s-qr-icon">⬛</div>
+          </div>
+          <div class="s-detected">✓ Code detected — FENAGRA-2024-0142</div>
+          <div style="padding:7px 9px;display:flex;gap:6px">
+            <div class="s-btn" style="background:#ef4444;margin:0">Stop</div>
+            <div style="padding:7px;border:1px solid var(--border);border-radius:4px;font-size:10px">🔦</div>
+          </div>
+        </div>
+      </div>
+      <ul class="callout-list" style="padding-top:.5rem">
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Tap "Start camera"</strong><span>The rear camera activates automatically with continuous autofocus.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow" style="color:var(--s2)">→</div><div class="callout-text"><strong>Aim at the code</strong><span>Works with QR codes, EAN barcodes, and badge IDs. Detection is automatic.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Green bar = detected</strong><span>Camera stops and the form appears instantly below.</span></div></li>
+      </ul>
+      <div class="tip" style="grid-column:1/-1"><div class="tip-icon">💡</div><div class="tip-text"><strong>No QR?</strong> Scroll below the camera and use the manual entry field — type any ID, email, or badge number.</div></div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--s3)">3</div>
+      <div><div class="step-title">Fill in the details</div><div class="step-desc">Select Business Unit, set priority, add a note.</div></div>
+    </div>
+    <div class="step-body">
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="s-section"><div class="s-label">Captured code</div><div class="s-id">FENAGRA-2024-0142</div></div>
+        <div class="s-section">
+          <div class="s-label">Business Unit</div>
+          <div class="s-div-row">
+            <div class="s-div-btn asc">🎨<br>Sense<br>Colours</div>
+            <div class="s-div-btn">🌿<br>Health &amp;<br>Functional</div>
+            <div class="s-div-btn afl">🧪<br>Flavours</div>
+          </div>
+        </div>
+        <div class="s-section">
+          <div class="s-label">Priority</div>
+          <div class="s-prio-row">
+            <div class="s-prio-btn">🔥 Hot</div>
+            <div class="s-prio-btn warm">🌤 Warm</div>
+            <div class="s-prio-btn">🧊 Cold</div>
+          </div>
+        </div>
+        <div class="s-section">
+          <div class="s-label">Notes</div>
+          <div class="s-note">Interested in natural colorants. ~€20k budget.</div>
+        </div>
+        <div class="s-section" style="border:none"><div class="s-btn">Save lead</div></div>
+      </div>
+      <ul class="callout-list" style="padding-top:.5rem">
+        <li class="callout-item"><div class="callout-arrow" style="color:var(--sc)">→</div><div class="callout-text"><strong>Select Business Unit(s)</strong><span>Tap one or more — at least one is required. Highlighted in color when selected.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow" style="color:var(--warm)">→</div><div class="callout-text"><strong>Set priority</strong><span><b style="color:var(--hot)">Hot</b> = urgent · <b style="color:var(--warm)">Warm</b> = good prospect · <b style="color:var(--cold)">Cold</b> = low priority</span></div></li>
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Add a note (optional)</strong><span>Product interest, budget, next steps. Editable later from the Leads tab.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow" style="color:var(--s3)">→</div><div class="callout-text"><strong>Tap "Save lead"</strong><span>Saved instantly — locally and synced to Google Sheets if connected.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--s4)">4</div>
+      <div><div class="step-title">Review &amp; edit leads</div><div class="step-desc">Access all captured leads from the Leads tab.</div></div>
+    </div>
+    <div class="step-body">
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="s-header"><div class="s-logo">Leads Tracker 1.0</div><div class="s-sub">Maria González · 3 leads captured</div></div>
+        <div class="s-tabs"><div class="s-tab">Scan</div><div class="s-tab active">Leads</div></div>
+        <div class="s-body">
+          <div class="s-stats">
+            <div class="s-stat"><div class="s-stat-n">3</div><div class="s-stat-l">Total</div></div>
+            <div class="s-stat"><div class="s-stat-n" style="color:var(--hot)">1</div><div class="s-stat-l">Hot</div></div>
+            <div class="s-stat"><div class="s-stat-n">2</div><div class="s-stat-l">W/ note</div></div>
+          </div>
+          <div class="s-sync-bar"><div class="s-sync-dot"></div><span>Ready</span><div class="s-sync-btn">Sync ↑</div></div>
+          <div class="s-lead">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="s-lead-id">FENAGRA-2024-0142</div>
+                <div class="s-lead-meta">Maria G. · Nov 14 <span class="s-badge" style="background:#f1f5f9;color:var(--muted)">Draft</span></div>
+                <div style="display:flex;gap:3px;margin-top:2px"><span class="s-dchip bu-sc">SC</span><span class="s-dchip bu-fl">FL</span></div>
+              </div>
+              <span class="s-badge" style="background:#fffbeb;color:var(--warm)">Warm</span>
+            </div>
+            <div class="s-note-text">Interested in natural colorants...</div>
+          </div>
+          <div class="s-lead" style="opacity:.6"><div class="s-lead-id">carlos@empresa.mx</div><div class="s-lead-meta">Maria G. · Nov 14 <span class="s-badge" style="background:#fef2f2;color:var(--hot)">Hot</span></div></div>
+        </div>
+      </div>
+      <ul class="callout-list" style="padding-top:.5rem">
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Tap "Leads" tab</strong><span>See all leads with stats, priority badges, and sync status.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow" style="color:var(--s4)">→</div><div class="callout-text"><strong>Edit a note anytime</strong><span>Tap ✏ Edit note on any card. Changes sync automatically to Sheets.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Search &amp; filter</strong><span>Use the search bar to find leads by name, ID, or note. Filter by Hot / Warm / Cold.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--s5)">5</div>
+      <div><div class="step-title">Sync &amp; export</div><div class="step-desc">Send all leads to Google Sheets or download a CSV.</div></div>
+    </div>
+    <div class="step-body">
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="s-body" style="padding-top:12px">
+          <div class="s-sync-bar" style="border-color:#fde68a;background:#fffbeb"><div class="s-sync-dot" style="background:var(--warm)"></div><span style="color:var(--warm)">Syncing 3 leads...</span><div class="s-sync-btn" style="opacity:.4">Sync ↑</div></div>
+          <div style="border:1px solid #bbf7d0;background:#f0fdf4;border-radius:5px;padding:8px 10px;font-size:9px;color:#16a34a;text-align:center;margin-bottom:8px;line-height:1.6">✓ 3 leads sent to Sheets</div>
+          <div class="s-btn outline" style="font-size:10px;padding:7px;margin-bottom:6px">Download CSV</div>
+          <div style="font-size:8px;color:var(--muted);text-align:center;line-height:1.6">leads_tradeshow.csv — opens in Excel</div>
+        </div>
+      </div>
+      <ul class="callout-list" style="padding-top:.5rem">
+        <li class="callout-item"><div class="callout-arrow" style="color:var(--s5)">→</div><div class="callout-text"><strong>Tap "Sync ↑"</strong><span>Sends all unsynced leads to the shared Google Sheet. Amber dot = syncing in progress.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Green dot = all synced</strong><span>Every lead from every operator lands in the same sheet in real time.</span></div></li>
+        <li class="callout-item"><div class="callout-arrow">→</div><div class="callout-text"><strong>Download CSV</strong><span>Exports all leads as .csv — opens in Excel with date, operator, BU, ID, priority, notes.</span></div></li>
+      </ul>
+      <div class="warn" style="grid-column:1/-1"><div style="font-size:16px;flex-shrink:0">⚠️</div><div class="warn-text"><strong>No internet?</strong> Leads are always saved locally first. Sync whenever you have connection — nothing is lost.</div></div>
+    </div>
+  </div>
+
+  <!-- QUICK REFERENCE -->
+  <div class="section-divider">Quick Reference</div>
+  <div class="quick-ref">
+    <h3>📋 At a glance</h3>
+    <div class="qr-grid">
+      <div class="qr-item"><div class="qr-icon">📷</div><div><div class="qr-label">Start camera</div><div class="qr-desc">Scan tab → "Start camera"</div></div></div>
+      <div class="qr-item"><div class="qr-icon">✏️</div><div><div class="qr-label">Edit a note</div><div class="qr-desc">Leads tab → card → Edit note</div></div></div>
+      <div class="qr-item"><div class="qr-icon">☁️</div><div><div class="qr-label">Sync to Sheets</div><div class="qr-desc">Leads tab → "Sync ↑"</div></div></div>
+      <div class="qr-item"><div class="qr-icon">📥</div><div><div class="qr-label">Export CSV</div><div class="qr-desc">Leads tab → "Download CSV"</div></div></div>
+      <div class="qr-item"><div class="qr-icon">🔦</div><div><div class="qr-label">Torch</div><div class="qr-desc">Appears when camera is active</div></div></div>
+      <div class="qr-item"><div class="qr-icon">👤</div><div><div class="qr-label">Change user</div><div class="qr-desc">Tap name pill → top right</div></div></div>
+    </div>
+    <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem">Priority</div>
+      <div class="prio-legend">
+        <div class="pl-item pl-hot">🔥 Hot — Follow up immediately</div>
+        <div class="pl-item pl-warm">🌤 Warm — Good prospect</div>
+        <div class="pl-item pl-cold">🧊 Cold — Low priority</div>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem">Business Units</div>
+      <div class="bu-legend">
+        <div class="bu-item bu-sc">🎨 Sense Colours</div>
+        <div class="bu-item bu-hf">🌿 Health &amp; Functional</div>
+        <div class="bu-item bu-fl">🧪 Flavours</div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>Leads Tracker 1.0 — Fenagra &nbsp;·&nbsp; Manual v1.0</footer>
+</body>
+</html>
