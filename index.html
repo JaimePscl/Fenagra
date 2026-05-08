@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#ffffff">
-<title>TradeLeads</title>
+<title>Leads Tracker 1.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -394,9 +394,9 @@ canvas { display: none; }
 
 <!-- PANTALLA: NOMBRE -->
 <div class="screen" id="screen-name">
-  <div class="screen-logo">TradeLeads</div>
-  <h2>Bienvenido al evento</h2>
-  <p>Escribe tu nombre para identificar<br>los leads que captures.</p>
+  <div class="screen-logo">Leads Tracker 1.0</div>
+  <h2>Welcome to Fenagra</h2>
+  <p>Enter your name to identify the leads you capture.</p>
   <div class="field">
     <label>Tu nombre</label>
     <input type="text" id="name-input" placeholder="Nombre completo" maxlength="40" autocomplete="off"/>
@@ -408,7 +408,7 @@ canvas { display: none; }
 <div id="app">
   <header>
     <div class="header-row">
-      <div class="logo">TradeLeads</div>
+      <div class="logo">Leads Tracker 1.0</div>
       <div class="user-pill" onclick="resetApp()">
         <div class="user-pill-dot"></div>
         <span id="uname">—</span>
@@ -471,13 +471,13 @@ canvas { display: none; }
               <span class="dicon">🎨</span>Sense Colours
             </button>
             <button class="div-btn" id="dt-hf" onclick="toggleDiv('hf')">
-              <span class="dicon">🌿</span>HF
+              <span class="dicon">🌿</span>Health & Functional
             </button>
             <button class="div-btn" id="dt-fl" onclick="toggleDiv('fl')">
               <span class="dicon">🧪</span>Flavours
             </button>
           </div>
-          <div class="field-err" id="div-err">Selecciona al menos una división.</div>
+          <div class="field-err" id="div-err">Select at least one Business Unit.</div>
         </div>
 
         <div class="form-section">
@@ -550,7 +550,7 @@ canvas { display: none; }
 // ── CONFIG ──
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyh5K8d7r3bIeUDbWgiIgZGU5zst8-HwgRvz8UdtFsVF-jF2Ml3CS4pvLhsQ5EGHH3A/exec';
 const TOKEN     = 'jSCupKyDxWQlhnw4rzP5F8oKV8ja941NZlrImIAZyJQ';
-const DIVS      = { sc:'Sense Colours', hf:'HF', fl:'Flavours' };
+const DIVS      = { sc: 'Sense Colours', hf: 'Health & Functional', fl: 'Flavours' };
 const BATCH_SIZE = 5;
 
 // ── STATE ──
