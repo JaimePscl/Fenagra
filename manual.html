@@ -6,14 +6,14 @@
 <title>Leads Tracker 1.0 — User Manual</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0f172a;--ink2:#334155;--muted:#94a3b8;--paper:#fafaf9;--white:#ffffff;--border:#e2e8f0;--hot:#dc2626;--warm:#d97706;--cold:#2563eb;--sc:#7c3aed;--hf:#0891b2;--fl:#ea580c;--s1:#6366f1;--s2:#0891b2;--s3:#16a34a;--s4:#d97706;--s5:#dc2626;--f:'DM Sans',sans-serif;--m:'DM Mono',monospace;}
+:root{--ink:#1a2a14;--ink2:#4a5a44;--muted:#7a8a74;--paper:#f0f7eb;--white:#ffffff;--border:#d4e4cc;--hot:#a33a2a;--warm:#b8860b;--cold:#1a5276;--sc:#4a7a3a;--hf:#2e7d6e;--fl:#8b5a2b;--s1:#4a7a3a;--s2:#2e7d6e;--s3:#4a7a3a;--s4:#b8860b;--s5:#a33a2a;--f:'DM Sans',sans-serif;--m:'DM Mono',monospace;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--paper);color:var(--ink);font-family:var(--f);line-height:1.6;}
 .cover{background:var(--ink);color:#fff;padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;}
 .cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.015) 40px,rgba(255,255,255,.015) 80px);}
 .cover-eyebrow{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1rem;font-family:var(--m);}
 .cover-title{font-size:clamp(32px,8vw,52px);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
-.cover-title span{color:#6366f1;}
+.cover-title span{color:#7aaa5a;}
 .cover-sub{font-size:16px;color:rgba(255,255,255,.55);margin-bottom:2.5rem;}
 .cover-tag{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:6px 14px;border-radius:99px;font-size:12px;color:rgba(255,255,255,.6);font-family:var(--m);}
 .intro-bar{background:#fff;border-bottom:1px solid var(--border);padding:1.5rem 2rem;display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;}
@@ -94,14 +94,14 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f);line-height:1
 .qr-desc{font-size:11px;color:var(--muted);margin-top:1px;}
 .prio-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem;}
 .pl-item{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:500;}
-.pl-hot{background:#fef2f2;color:var(--hot);}
-.pl-warm{background:#fffbeb;color:var(--warm);}
-.pl-cold{background:#eff6ff;color:var(--cold);}
+.pl-hot{background:#fdf0ee;color:var(--hot);}
+.pl-warm{background:#fdf6e3;color:var(--warm);}
+.pl-cold{background:#eaf2f8;color:var(--cold);}
 .bu-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem;}
 .bu-item{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:500;}
-.bu-sc{background:#f5f3ff;color:var(--sc);}
-.bu-hf{background:#ecfeff;color:var(--hf);}
-.bu-fl{background:#fff7ed;color:var(--fl);}
+.bu-sc{background:#eaf4e2;color:var(--sc);}
+.bu-hf{background:#e6f4f1;color:var(--hf);}
+.bu-fl{background:#f5ede0;color:var(--fl);}
 footer{background:var(--ink);color:rgba(255,255,255,.4);padding:2rem;text-align:center;font-size:12px;font-family:var(--m);}
 </style>
 </head>
@@ -114,7 +114,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.4);padding:2rem;text-align:
 </div>
 <div class="intro-bar">
   <div class="intro-item"><div class="n">3</div><div class="l">Business Units</div></div>
-  <div class="intro-item"><div class="n" style="color:var(--s1)">5</div><div class="l">Steps total</div></div>
+  <div class="intro-item"><div class=.n" style="color:var(--s1)">5</div><div class="l">Steps total</div></div>
   <div class="intro-item"><div class="n" style="color:var(--s3)">∞</div><div class="l">Leads per user</div></div>
   <div class="intro-item"><div class="n" style="color:var(--warm)">Live</div><div class="l">Sheets sync</div></div>
 </div>
@@ -246,11 +246,11 @@ footer{background:var(--ink);color:rgba(255,255,255,.4);padding:2rem;text-align:
                 <div class="s-lead-meta">Maria G. · Nov 14 <span class="s-badge" style="background:#f1f5f9;color:var(--muted)">Draft</span></div>
                 <div style="display:flex;gap:3px;margin-top:2px"><span class="s-dchip bu-sc">SC</span><span class="s-dchip bu-fl">FL</span></div>
               </div>
-              <span class="s-badge" style="background:#fffbeb;color:var(--warm)">Warm</span>
+              <span class="s-badge" style="background:#fdf6e3;color:var(--warm)">Warm</span>
             </div>
             <div class="s-note-text">Interested in natural colorants...</div>
           </div>
-          <div class="s-lead" style="opacity:.6"><div class="s-lead-id">carlos@empresa.mx</div><div class="s-lead-meta">Maria G. · Nov 14 <span class="s-badge" style="background:#fef2f2;color:var(--hot)">Hot</span></div></div>
+          <div class="s-lead" style="opacity:.6"><div class="s-lead-id">carlos@empresa.mx</div><div class="s-lead-meta">Maria G. · Nov 14 <span class="s-badge" style="background:#fdf0ee;color:var(--hot)">Hot</span></div></div>
         </div>
       </div>
       <ul class="callout-list" style="padding-top:.5rem">

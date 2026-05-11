@@ -6,34 +6,34 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#4a7a3a">
 <title>Leads Tracker 1.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f9f9f9;
+  --bg: #f0f7eb;
   --surface: #ffffff;
-  --border: #e5e5e5;
-  --border-focus: #111;
-  --text: #111;
-  --muted: #888;
-  --muted2: #555;
-  --accent: #111;
-  --accent-inv: #fff;
-  --hot: #dc2626;
-  --hot-bg: #fef2f2;
-  --warm: #d97706;
-  --warm-bg: #fffbeb;
-  --cold: #2563eb;
-  --cold-bg: #eff6ff;
-  --green: #16a34a;
-  --green-bg: #f0fdf4;
-  --sc: #7c3aed;
-  --sc-bg: #f5f3ff;
-  --hf: #0891b2;
-  --hf-bg: #ecfeff;
-  --fl: #ea580c;
-  --fl-bg: #fff7ed;
+  --border: #d4e4cc;
+  --border-focus: #4a7a3a;
+  --text: #1a2a14;
+  --muted: #7a8a74;
+  --muted2: #4a5a44;
+  --accent: #4a7a3a;
+  --accent-inv: #ffffff;
+  --hot: #a33a2a;
+  --hot-bg: #fdf0ee;
+  --warm: #b8860b;
+  --warm-bg: #fdf6e3;
+  --cold: #1a5276;
+  --cold-bg: #eaf2f8;
+  --green: #4a7a3a;
+  --green-bg: #eaf4e2;
+  --sc: #4a7a3a;
+  --sc-bg: #eaf4e2;
+  --hf: #2e7d6e;
+  --hf-bg: #e6f4f1;
+  --fl: #8b5a2b;
+  --fl-bg: #f5ede0;
   --radius: 10px;
   --radius-sm: 6px;
   --f: 'Inter', sans-serif;
@@ -127,7 +127,7 @@ header {
   border-bottom: 2px solid transparent;
   transition: all .15s;
 }
-.tab.active { color: var(--text); border-bottom-color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
 .content { flex: 1; padding: 1rem 1.25rem 2rem; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--bg); }
 
@@ -183,7 +183,7 @@ header {
 .btn-cam {
   flex: 1; padding: 10px; font-size: 13px; font-weight: 500;
   font-family: var(--f); border-radius: var(--radius-sm);
-  background: var(--text); color: var(--accent-inv);
+  background: var(--accent); color: var(--accent-inv);
   border: none; cursor: pointer; transition: opacity .15s;
 }
 .btn-cam:active { opacity: .8; }
@@ -251,7 +251,7 @@ header {
 
 .btn-save {
   width: 100%; padding: 12px; font-size: 14px; font-weight: 500;
-  font-family: var(--f); background: var(--text); color: var(--accent-inv);
+  font-family: var(--f); background: var(--accent); color: var(--accent-inv);
   border: none; border-radius: var(--radius-sm);
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: opacity .15s;
@@ -304,7 +304,7 @@ header {
 }
 .btn-sync {
   padding: 6px 12px; font-size: 12px; font-weight: 500;
-  font-family: var(--f); background: var(--text); color: var(--accent-inv);
+  font-family: var(--f); background: var(--accent); color: var(--accent-inv);
   border: none; border-radius: var(--radius-sm); cursor: pointer; white-space: nowrap;
   transition: opacity .15s;
 }
@@ -359,7 +359,7 @@ header {
 .edit-actions { display: flex; gap: 6px; }
 .btn-edit-save {
   flex: 1; padding: 8px; font-size: 12px; font-weight: 500;
-  font-family: var(--f); background: var(--text); color: var(--accent-inv);
+  font-family: var(--f); background: var(--accent); color: var(--accent-inv);
   border: none; border-radius: var(--radius-sm); cursor: pointer;
 }
 .btn-edit-cancel {
